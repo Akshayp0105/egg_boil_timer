@@ -7,16 +7,18 @@ const EGG_LEVELS = {
   hard: { time: 14 * 60, label: 'Hard Boiled', color: '#FF8C00' }
 };
 
-const API_URL = 'http://localhost:5000/api';
+/* ✅ UPDATED: backend URL (Render) */
+const API_URL = `${import.meta.env.VITE_API_URL}/api`;
 
 export const useEggTimer = () => {
   const [selectedLevel, setSelectedLevel] = useState(null);
   const [timeRemaining, setTimeRemaining] = useState(0);
   const [isRunning, setIsRunning] = useState(false);
   const [isCompleted, setIsCompleted] = useState(false);
+
   const startTimeRef = useRef(null);
 
-  // Show notification
+  /* 🔔 Notification */
   const showNotification = (message) => {
     if ('Notification' in window && Notification.permission === 'granted') {
       new Notification('Egg Timer', {
@@ -28,11 +30,11 @@ export const useEggTimer = () => {
     }
   };
 
-  // Save session to backend
+  /* 💾 Save session to backend */
   const saveSession = async (completed) => {
     try {
       const duration = selectedLevel ? EGG_LEVELS[selectedLevel].time : 0;
-      
+
       await fetch(`${API_URL}/timer/save-session`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -44,7 +46,6 @@ export const useEggTimer = () => {
         })
       });
 
-      // Update stats
       await fetch(`${API_URL}/stats/update`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -53,12 +54,12 @@ export const useEggTimer = () => {
           completed
         })
       });
-    } catch (error) {
-      console.error('Error saving session:', error);
+    } catch (err) {
+      console.error('Save session failed:', err);
     }
   };
 
-  // Timer logic with API integration
+  /* ⏱ Timer logic */
   useEffect(() => {
     let interval;
 
@@ -67,14 +68,14 @@ export const useEggTimer = () => {
         setTimeRemaining((prev) => {
           if (prev <= 1) {
             setIsRunning(false);
+            setIsCompleted(true);
             audioAlert.playCompletionAlert();
             showNotification('Your egg is ready!');
-            setIsCompleted(true);
             saveSession(true);
             return 0;
           }
 
-          if (prev === 60 || prev === 30 || prev === 10) {
+          if ([60, 30, 10].includes(prev)) {
             audioAlert.playMilestoneAlert();
           }
 
@@ -84,10 +85,9 @@ export const useEggTimer = () => {
     }
 
     return () => clearInterval(interval);
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- saveSession/showNotification are stable
   }, [isRunning, timeRemaining]);
 
-  // Start timer with selected level
+  /* ▶ Start timer */
   const startTimer = (level) => {
     if (selectedLevel === level && isRunning) {
       setIsRunning(false);
@@ -95,23 +95,21 @@ export const useEggTimer = () => {
       return;
     }
 
-    if (selectedLevel !== level) {
-      startTimeRef.current = new Date();
-      setSelectedLevel(level);
-      setTimeRemaining(EGG_LEVELS[level].time);
-      setIsRunning(true);
-      setIsCompleted(false);
-      audioAlert.playMilestoneAlert();
-    }
+    startTimeRef.current = new Date();
+    setSelectedLevel(level);
+    setTimeRemaining(EGG_LEVELS[level].time);
+    setIsRunning(true);
+    setIsCompleted(false);
+    audioAlert.playMilestoneAlert();
   };
 
-  // Pause timer
+  /* ⏸ Pause */
   const pauseTimer = () => {
-    setIsRunning(!isRunning);
+    setIsRunning((prev) => !prev);
     audioAlert.playPauseAlert();
   };
 
-  // Reset timer
+  /* 🔁 Reset */
   const resetTimer = () => {
     setIsRunning(false);
     setTimeRemaining(0);
@@ -120,14 +118,16 @@ export const useEggTimer = () => {
     saveSession(false);
   };
 
-  // Format time display
+  /* ⏳ Format time */
   const formatTime = (seconds) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    return `${mins.toString().padStart(2, '0')}:${secs
+      .toString()
+      .padStart(2, '0')}`;
   };
 
-  // Request notification permission
+  /* 🔔 Permission */
   const requestNotificationPermission = () => {
     if ('Notification' in window && Notification.permission === 'default') {
       Notification.requestPermission();
