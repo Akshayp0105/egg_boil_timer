@@ -1,79 +1,29 @@
-🧠 About the Project
+# 🥚 Egg Boiling Timer – Full Stack Web App
 
-Egg Boiling Timer is a full-stack web application that helps users cook eggs at different doneness levels — Soft, Medium, and Hard boiled — with accurate timers, animations, sound alerts, and session tracking.
+A modern, animated **Egg Boiling Timer** that helps users cook **perfect eggs every time** — soft, medium, or hard boiled.
 
-This project was built to demonstrate:
+Built with **React (Vite)** on the frontend and **Node.js + Express** on the backend, featuring sound alerts, notifications, statistics tracking, and theme customization.
 
-Real-world frontend + backend integration
+---
 
-Production-grade deployment
+## 🌐 Live Demo
 
-Clean project architecture
+- **Frontend (Vercel)**  
+  👉 https://egg-boil-timer-pgam.vercel.app
 
-Environment-based configuration
+- **Backend API (Render)**  
+  👉 https://egg-boil-timer.onrender.com
 
-✨ Features
-🥚 Core Features
+- **API Health Check**  
+  👉 https://egg-boil-timer.onrender.com/api/health
 
-Soft / Medium / Hard boil selection
+---
 
-Real-time countdown timer
+## 🖼 Preview
 
-Smooth animations with Framer Motion
+_Add screenshots of the application UI here_
 
-Audio alerts for milestones & completion
-
-Browser notifications when eggs are ready
-
-📊 Advanced Features
-
-Session tracking (completed / reset)
-
-Cooking statistics stored on backend
-
-Theme switching (Orange, Blue, Purple, Pink)
-
-Persistent user preferences
-
-⚙️ Engineering Features
-
-Fully separated frontend & backend
-
-Environment-based API configuration
-
-Deployed on modern cloud platforms
-
-Git-safe (no secrets committed)
-
-🧱 Tech Stack
-Frontend
-
-React (Vite)
-
-JavaScript (ES6+)
-
-Framer Motion
-
-React Icons
-
-CSS (Custom theming)
-
-Backend
-
-Node.js
-
-Express.js
-
-REST API
-
-CORS
-
-dotenv
-
-Deployment
-
-Frontend: Vercel
-
-Backend: Render
-
-Version Control: Git & GitHub
+```md
+![Home](./screenshots/home.png)
+![Timer Running](./screenshots/timer.png)
+![Statistics](./screenshots/stats.png)
