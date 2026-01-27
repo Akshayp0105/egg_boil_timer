@@ -1,0 +1,112 @@
+/* TimerDisplay.css */
+
+.timer-display {
+  font-size: 5rem;
+  font-weight: 800;
+  font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+  color: #2c3e50;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  background: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
+  border-radius: 20px;
+  min-width: 300px;
+  text-align: center;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  letter-spacing: 0.1em;
+  transition: all 0.3s ease;
+}
+
+.timer-display.running {
+  animation: timerPulse 1s ease-in-out infinite;
+  background: linear-gradient(135deg, #fff9e6 0%, #ffe6cc 100%);
+  color: var(--theme-primary);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.timer-display.completed {
+  animation: timerSuccess 0.6s ease;
+  background: linear-gradient(135deg, #fff9e6 0%, #ffe6cc 100%);
+  color: var(--theme-accent);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+@keyframes timerPulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes timerSuccess {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.timer-value {
+  font-size: 5rem;
+  font-weight: 800;
+  transition: all 0.3s ease;
+}
+
+.completion-message {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+  animation: fadeInDown 0.6s ease;
+  color: #f7931e;
+}
+
+@keyframes fadeInDown {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .timer-display {
+    font-size: 3.5rem;
+    padding: 1.5rem;
+    min-width: 200px;
+  }
+
+  .timer-value {
+    font-size: 3.5rem;
+  }
+
+  .completion-message {
+    font-size: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .timer-display {
+    font-size: 2.5rem;
+    padding: 1rem;
+    min-width: 150px;
+  }
+
+  .timer-value {
+    font-size: 2.5rem;
+  }
+
+  .completion-message {
+    font-size: 1.2rem;
+  }
+}

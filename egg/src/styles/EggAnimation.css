@@ -1,0 +1,442 @@
+/* EggAnimation.css - Main animation styles for egg boiling */
+
+.egg-animation-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  padding: 2rem;
+  background: linear-gradient(165deg, #f5f2ed 0%, #e8e4dc 100%);
+  border-radius: 12px;
+  min-height: 400px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 4px 20px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  position: relative;
+}
+
+/* Row: egg/pot + thermometer */
+.egg-and-thermometer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+}
+
+.egg-wrapper {
+  position: relative;
+  width: 280px;
+  height: 300px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Thermometer bar - vertical, next to egg */
+.thermometer-wrap {
+  flex-shrink: 0;
+}
+
+.thermometer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.thermometer-label {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #3d3d3d;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.thermometer-bulb {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #6b6b6b 0%, #8a8a8a 50%, #5c5c5c 100%);
+  border: 2px solid #4a4a4a;
+  box-shadow: inset 0 2px 6px rgba(255, 255, 255, 0.15), 0 2px 6px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.thermometer-bulb-fill {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(145deg, #c43a2a 0%, #e85a35 50%, #d94a28 100%);
+  opacity: 0.35;
+  border-radius: 50%;
+}
+
+.thermometer-tube {
+  position: relative;
+  width: 22px;
+  height: 180px;
+  background: linear-gradient(90deg, #5a5a5a 0%, #7a7a7a 50%, #545454 100%);
+  border: 2px solid #404040;
+  border-top-left-radius: 4px;
+  border-top-right-radius: 4px;
+  border-bottom: none;
+  box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+.thermometer-tick {
+  position: absolute;
+  left: -10px;
+  width: 6px;
+  height: 1px;
+  background: #333;
+  pointer-events: none;
+}
+
+.thermometer-fill {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  min-height: 3px;
+  background: linear-gradient(180deg, #c43a2a 0%, #e85a35 40%, #d94a28 100%);
+  border-radius: 2px 2px 0 0;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: height 0.35s ease-out;
+}
+
+.pot-container {
+  position: relative;
+  width: 280px;
+  height: 280px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* POT STYLING */
+.pot {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 220px;
+  height: 140px;
+  background: linear-gradient(135deg, #8b7355 0%, #a0826d 50%, #8b7355 100%);
+  border-radius: 0 0 40px 40px;
+  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.3),
+              0 4px 12px rgba(0, 0, 0, 0.2);
+  border: 2px solid #704214;
+}
+
+.pot::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: linear-gradient(180deg, #d4a574 0%, #8b7355 100%);
+  border-radius: 50%;
+}
+
+.pot-handle {
+  position: absolute;
+  right: -20px;
+  top: 30px;
+  width: 30px;
+  height: 50px;
+  border: 4px solid #8b7355;
+  border-left: none;
+  border-radius: 0 15px 15px 0;
+  background: transparent;
+}
+
+/* WATER/STEAM */
+.water {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 0%;
+  background: linear-gradient(180deg, rgba(173, 216, 230, 0.8) 0%, rgba(100, 180, 220, 0.6) 100%);
+  border-radius: 0 0 38px 38px;
+  transition: height 0.3s ease;
+  overflow: hidden;
+}
+
+/* BUBBLES - restrained, industrial */
+.bubble {
+  position: absolute;
+  bottom: 0;
+  background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.7), rgba(160, 200, 220, 0.25));
+  border-radius: 50%;
+  animation: rise 2.8s ease-in infinite;
+}
+
+.bubble-1 {
+  width: 8px;
+  height: 8px;
+  left: 22%;
+  animation-delay: 0s;
+}
+
+.bubble-2 {
+  width: 6px;
+  height: 6px;
+  left: 42%;
+  animation-delay: 0.4s;
+}
+
+.bubble-3 {
+  width: 7px;
+  height: 7px;
+  left: 62%;
+  animation-delay: 0.8s;
+}
+
+.bubble-4 {
+  width: 5px;
+  height: 5px;
+  left: 78%;
+  animation-delay: 1.2s;
+}
+
+@keyframes rise {
+  0% {
+    bottom: 0;
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    bottom: 100%;
+    opacity: 0;
+  }
+}
+
+/* EGG - centered in pot (position only; rotation is on .egg-inner so transform isn't overridden) */
+.egg-main {
+  position: absolute;
+  width: 100px;
+  height: 120px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+
+.egg-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.egg-white {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(ellipse at 35% 35%, #ffffff 0%, #f5f5f0 50%, #e8e8e0 100%);
+  border-radius: 50% 50% 45% 45%;
+  box-shadow: inset -8px -8px 20px rgba(0, 0, 0, 0.1),
+              inset 8px 8px 20px rgba(255, 255, 255, 0.5),
+              0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.egg-yolk {
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  background: radial-gradient(ellipse at 35% 35%, #FFF9E6 0%, #FFE680 50%, #FFCC00 100%);
+  border-radius: 50%;
+  top: 35px;
+  left: 25px;
+  box-shadow: inset -4px -4px 12px rgba(0, 0, 0, 0.1),
+              inset 4px 4px 12px rgba(255, 255, 255, 0.4);
+  transition: background-color 0.3s ease, opacity 0.3s ease;
+}
+
+/* CRACKS ON COMPLETION */
+.crack {
+  position: absolute;
+  background: linear-gradient(45deg, transparent 40%, rgba(0, 0, 0, 0.1) 41%, rgba(0, 0, 0, 0.1) 59%, transparent 60%);
+  opacity: 0;
+  animation: appearCrack 0.6s ease forwards;
+}
+
+.crack-1 {
+  width: 40px;
+  height: 3px;
+  top: 30px;
+  left: 30px;
+  transform: rotate(45deg);
+  animation-delay: 0.2s;
+}
+
+.crack-2 {
+  width: 50px;
+  height: 2px;
+  top: 60px;
+  left: 20px;
+  transform: rotate(-30deg);
+  animation-delay: 0.4s;
+}
+
+@keyframes appearCrack {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.egg-main.completed {
+  animation: none;
+}
+
+/* HEAT WAVES - industrial: centred on egg, thin rings, subtle */
+.heat-wave-origin {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+
+.heat-wave {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 80px;
+  height: 80px;
+  margin-left: -40px;
+  margin-top: -40px;
+  border: 1px solid rgba(180, 70, 40, 0.45);
+  border-radius: 50%;
+  pointer-events: none;
+  box-shadow: 0 0 0 0 rgba(180, 70, 40, 0.08);
+}
+
+.heat-wave-1 { border-color: rgba(160, 60, 35, 0.5); }
+.heat-wave-2 { border-color: rgba(180, 70, 40, 0.4); }
+.heat-wave-3 { border-color: rgba(140, 50, 30, 0.35); }
+
+/* Industrial heat shimmer - subtle rising distortion */
+.heat-shimmer {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 140px;
+  height: 120px;
+  margin-left: -70px;
+  margin-top: -90px;
+  background: radial-gradient(
+    ellipse 80% 70% at 50% 60%,
+    rgba(200, 90, 50, 0.06) 0%,
+    rgba(180, 70, 40, 0.03) 40%,
+    transparent 70%
+  );
+  pointer-events: none;
+  animation: heatShimmer 2.5s ease-in-out infinite;
+}
+
+@keyframes heatShimmer {
+  0%, 100% { opacity: 0.6; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.08); }
+}
+
+/* HEAT INDICATOR - stovetop / industrial */
+.heat-indicator {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 200px;
+  height: 5px;
+  background: #333;
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.4);
+}
+
+.heat-level {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0%;
+  height: 100%;
+  background: linear-gradient(90deg, #8a2a20, #c43a2a);
+  transition: width 0.4s ease-out;
+}
+
+/* PROGRESS INFO */
+.progress-info {
+  text-align: center;
+  width: 100%;
+}
+
+.level-label {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #2a2a2a;
+  margin: 0 0 0.5rem;
+  letter-spacing: 0.02em;
+}
+
+.progress-bar-label {
+  font-size: 0.8rem;
+  color: #555;
+  margin: 0.5rem 0;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: #2d2d2d;
+  border-radius: 3px;
+  overflow: hidden;
+  margin-top: 1rem;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #b83828, #d94a28);
+  border-radius: 3px;
+  transition: width 0.25s ease-out;
+  box-shadow: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .egg-animation-container {
+    padding: 1rem;
+    min-height: 400px;
+    gap: 1.5rem;
+  }
+
+  .egg-and-thermometer {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .thermometer-tube {
+    height: 140px;
+  }
+
+  .pot-container {
+    transform: scale(0.85);
+  }
+
+  .heat-indicator {
+    right: -40px;
+    height: 150px;
+  }
+}
