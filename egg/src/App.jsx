@@ -1,46 +1,24 @@
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
-import { MdEgg } from 'react-icons/md';
-import { FiBarChart2, FiSettings } from 'react-icons/fi';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  Zap, 
+  Settings as SettingsIcon, 
+  BarChart3, 
+  Play, 
+  Pause, 
+  RotateCcw, 
+  Rocket,
+  Bell,
+  CheckCircle2,
+  Trophy,
+  AlertTriangle
+} from 'lucide-react';
 import { useEggTimer } from './hooks/useEggTimer';
-import EggAnimation from './components/EggAnimation';
-import TimerDisplay from './components/TimerDisplay';
-import LevelSelector from './components/LevelSelector';
-import Controls from './components/Controls';
+import Scene3D from './components/Scene3D';
 import Statistics from './components/Statistics';
 import Settings from './components/Settings';
+import SteamParticles from './components/SteamParticles';
 import './App.css';
-
-const THEMES = {
-  orange: {
-    primary: '#FF8C42',
-    secondary: '#FF6B35',
-    accent: '#F7931E',
-    light: '#FFA500',
-    gradient: 'linear-gradient(135deg, #ff8c42 0%, #ff6b35 25%, #f7931e 50%, #ffa500 75%, #ff8c42 100%)'
-  },
-  purple: {
-    primary: '#9D4EDD',
-    secondary: '#7209B7',
-    accent: '#B5179E',
-    light: '#C77DFF',
-    gradient: 'linear-gradient(135deg, #9D4EDD 0%, #7209B7 25%, #B5179E 50%, #C77DFF 75%, #9D4EDD 100%)'
-  },
-  blue: {
-    primary: '#00B4D8',
-    secondary: '#0077B6',
-    accent: '#0096C7',
-    light: '#00D9FF',
-    gradient: 'linear-gradient(135deg, #00B4D8 0%, #0077B6 25%, #0096C7 50%, #00D9FF 75%, #00B4D8 100%)'
-  },
-  pink: {
-    primary: '#FF006E',
-    secondary: '#D60061',
-    accent: '#FB5607',
-    light: '#FF4DCA',
-    gradient: 'linear-gradient(135deg, #FF006E 0%, #D60061 25%, #FB5607 50%, #FF4DCA 75%, #FF006E 100%)'
-  }
-};
 
 function App() {
   const {
@@ -58,149 +36,195 @@ function App() {
 
   const [showStats, setShowStats] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
-  const [currentTheme, setCurrentTheme] = useState(() => localStorage.getItem('eggTimerTheme') || 'orange');
+  
+  const progress = selectedLevel 
+    ? ((EGG_LEVELS[selectedLevel].time - timeRemaining) / EGG_LEVELS[selectedLevel].time) * 100 
+    : 0;
 
-  // Apply theme to document
-  const applyTheme = (theme) => {
-    const themeColors = THEMES[theme];
-    document.documentElement.style.setProperty('--theme-primary', themeColors.primary);
-    document.documentElement.style.setProperty('--theme-secondary', themeColors.secondary);
-    document.documentElement.style.setProperty('--theme-accent', themeColors.accent);
-    document.documentElement.style.setProperty('--theme-light', themeColors.light);
-    document.documentElement.style.setProperty('--theme-gradient', themeColors.gradient);
-    localStorage.setItem('eggTimerTheme', theme);
-  };
-
-  // Apply theme on mount and when theme changes
-  useEffect(() => {
-    applyTheme(currentTheme);
-  }, [currentTheme]);
-
-  const handleThemeChange = (theme) => {
-    setCurrentTheme(theme);
-    applyTheme(theme);
-  };
-
-  // Request notification permission on mount
   useEffect(() => {
     requestNotificationPermission();
   }, [requestNotificationPermission]);
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.2,
-        delayChildren: 0.1
-      }
-    }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { type: 'spring', stiffness: 200, damping: 25 }
-    }
+  // Funnier Labels Mapping
+  const funLabels = {
+    soft: { title: "THE GOOEY ONE", desc: "Liquid gold inside" },
+    medium: { title: "THE BALANCED", desc: "Best of both worlds" },
+    hard: { title: "ROCK SOLID", desc: "Industrial strength" }
   };
 
   return (
-    <div className="app-wrapper">
-      <motion.div 
-        className="app-container" 
-        variants={containerVariants} 
-        initial="hidden" 
-        animate="visible"
-      >
-        <motion.header className="app-header" variants={itemVariants}>
-          <motion.div className="header-top">
-            <motion.div
-              className="header-icon"
-              animate={{ rotate: 360 }}
-              transition={{ duration: 3, repeat: Infinity, ease: 'linear' }}
-            >
-              <MdEgg size={60} />
-            </motion.div>
-            <motion.button
-              className="stats-toggle"
-              onClick={() => setShowStats(!showStats)}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              title="View Statistics"
-            >
-              <FiBarChart2 size={24} />
-            </motion.button>
-            <motion.button
-              className="settings-toggle"
-              onClick={() => setShowSettings(true)}
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
-              title="Settings"
-            >
-              <FiSettings size={24} />
-            </motion.button>
-          </motion.div>
-          <h1 className="app-title">Egg Boiling Timer</h1>
-          <p className="app-subtitle">Perfect boiled eggs every time</p>
-        </motion.header>
-
-        {showStats && (
-          <motion.div
-            className="stats-container"
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
-            exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 0.3 }}
-            onClick={(e) => e.stopPropagation()}
+    <div className="app-container cyber-theme">
+      {/* Background FX */}
+      <div className="bg-scanline"></div>
+      <div className="bg-glow"></div>
+      
+      {/* Navigation */}
+      <nav className="nav-bar glass-card cyber-border">
+        <div className="nav-logo">
+          <Zap className="logo-icon pulse-glow" />
+          <span className="logo-text">YOLKTRON<span className="logo-sub">3000</span></span>
+        </div>
+        <div className="nav-actions">
+          <motion.button 
+            whileHover={{ scale: 1.1, rotate: 5 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => setShowStats(!showStats)} 
+            className="nav-btn"
           >
+            <BarChart3 size={20} />
+          </motion.button>
+          <motion.button 
+            whileHover={{ scale: 1.1, rotate: -5 }}
+            whileTap={{ scale: 0.9 }}
+            onClick={() => setShowSettings(true)} 
+            className="nav-btn"
+          >
+            <SettingsIcon size={20} />
+          </motion.button>
+        </div>
+      </nav>
+
+      <main className="main-content">
+        <div className="content-grid">
+          {/* 3D Visualizer Section */}
+          <section className="visualizer-section">
+            <div className="visualizer-container">
+              <SteamParticles isRunning={isRunning} />
+              <Scene3D 
+                isRunning={isRunning} 
+                progress={progress} 
+                level={selectedLevel} 
+              />
+              
+              <AnimatePresence>
+                {isCompleted && (
+                  <motion.div 
+                    initial={{ opacity: 0, scale: 0.5, y: 50 }}
+                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                    className="completion-badge-mega"
+                  >
+                    <Trophy className="completion-icon bounce" />
+                    <div className="completion-text">
+                      <span className="mega-title">MISSION COMPLETE</span>
+                      <span className="mega-sub">Target acquired & boiled</span>
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+            
+            <div className="timer-display-premium cyber-panel">
+              <span className="timer-label-cyber">
+                {selectedLevel ? funLabels[selectedLevel].title : 'AWAITING INPUT...'}
+              </span>
+              <h2 className="timer-value glitch-text" data-text={formatTime(timeRemaining)}>
+                {formatTime(timeRemaining)}
+              </h2>
+              <div className="progress-track-cyber">
+                <motion.div 
+                  className="progress-bar-neon"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${progress}%` }}
+                />
+              </div>
+            </div>
+          </section>
+
+          {/* Controls & Selection Section */}
+          <section className="controls-section glass-card cyber-border">
+            <div className="section-header-cyber">
+              <Rocket size={18} className="text-primary" />
+              <h3 className="section-title">SELECT INTENSITY</h3>
+            </div>
+            
+            <div className="level-grid">
+              {Object.entries(EGG_LEVELS).map(([key, level]) => (
+                <button
+                  key={key}
+                  onClick={() => startTimer(key)}
+                  className={`level-card-cyber ${selectedLevel === key ? 'active' : ''}`}
+                >
+                  <div className="level-info">
+                    <span className="level-name-cyber">{funLabels[key].title}</span>
+                    <span className="level-desc-cyber">{funLabels[key].desc}</span>
+                  </div>
+                  <div className="level-meta-cyber">
+                    <span className="level-time-cyber">{level.time / 60}m</span>
+                    <div className="level-dot" style={{ background: level.color }}></div>
+                  </div>
+                </button>
+              ))}
+            </div>
+
+            <div className="action-buttons">
+              {!isRunning && timeRemaining === 0 ? (
+                <button 
+                  className="primary-button cyber-btn-main" 
+                  disabled={!selectedLevel}
+                  onClick={() => selectedLevel && startTimer(selectedLevel)}
+                >
+                  <Play size={22} fill="currentColor" />
+                  INITIATE BOIL SEQUENCE
+                </button>
+              ) : (
+                <div className="active-controls">
+                  <button className="control-btn pause-btn-cyber" onClick={pauseTimer}>
+                    {isRunning ? <Pause size={20} /> : <Play size={20} />}
+                    {isRunning ? 'HALT' : 'RESUME'}
+                  </button>
+                  <button className="control-btn reset-btn-cyber" onClick={resetTimer}>
+                    <RotateCcw size={20} />
+                    ABORT
+                  </button>
+                </div>
+              )}
+            </div>
+
+            <div className="status-terminal">
+              <div className="terminal-line">
+                <span className="prompt">{'>'}</span>
+                <span className="text">
+                  {isRunning ? 'THERMAL ACTIVITY DETECTED' : 'SYSTEM IDLE'}
+                </span>
+              </div>
+              <div className="terminal-line">
+                <span className="prompt">{'>'}</span>
+                <span className="text">
+                  {selectedLevel ? `CALIBRATED FOR: ${selectedLevel.toUpperCase()}` : 'WAITING FOR COMMAND'}
+                </span>
+              </div>
+            </div>
+          </section>
+        </div>
+      </main>
+
+      {/* Overlays */}
+      <AnimatePresence>
+        {showStats && (
+          <motion.div 
+            initial={{ x: '100%', opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: '100%', opacity: 0 }}
+            className="sidebar-overlay-cyber glass-card"
+          >
+            <div className="sidebar-header">
+              <h3>DATABASE ACCESS</h3>
+              <button onClick={() => setShowStats(false)} className="close-btn-cyber">_</button>
+            </div>
             <Statistics />
           </motion.div>
         )}
+      </AnimatePresence>
 
-        <Settings isOpen={showSettings} onClose={() => setShowSettings(false)} currentTheme={currentTheme} onThemeChange={handleThemeChange} />
+      <Settings 
+        isOpen={showSettings} 
+        onClose={() => setShowSettings(false)} 
+      />
 
-        <motion.main className="app-main" variants={itemVariants}>
-          <TimerDisplay
-            timeRemaining={timeRemaining}
-            formatTime={formatTime}
-            isRunning={isRunning}
-            isCompleted={isCompleted}
-          />
-
-          <EggAnimation
-            isRunning={isRunning}
-            selectedLevel={selectedLevel}
-            timeRemaining={timeRemaining}
-            totalTime={selectedLevel ? EGG_LEVELS[selectedLevel].time : 0}
-            isCompleted={isCompleted}
-          />
-
-          <LevelSelector
-            levels={EGG_LEVELS}
-            selectedLevel={selectedLevel}
-            onSelectLevel={startTimer}
-            isRunning={isRunning}
-            timeRemaining={timeRemaining}
-          />
-
-          <Controls
-            isRunning={isRunning}
-            selectedLevel={selectedLevel}
-            onPause={pauseTimer}
-            onReset={resetTimer}
-            onStart={startTimer}
-            levels={EGG_LEVELS}
-          />
-        </motion.main>
-
-        <motion.footer className="app-footer" variants={itemVariants}>
-          <p className="footer-text">
-            ✨ Choose your preferred boiling level and start cooking!
-          </p>
-        </motion.footer>
-      </motion.div>
+      <footer className="app-footer-cyber">
+        <div className="footer-line"></div>
+        <p>TERMINAL ID: Y-3000-EGG • NO CHICKENS WERE HARMED</p>
+      </footer>
     </div>
   );
 }

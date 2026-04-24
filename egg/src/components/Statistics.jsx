@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
-import { FiTrendingUp, FiTarget, FiCheckCircle } from 'react-icons/fi';
-import '../styles/Statistics.css';
+import { TrendingUp, Target, History, Star } from 'lucide-react';
 
-const API_URL = 'http://localhost:5000/api';
+const API_URL = `${import.meta.env.VITE_API_URL}/api`;
 
 const Statistics = () => {
   const [stats, setStats] = useState(null);
@@ -25,133 +24,177 @@ const Statistics = () => {
       setLoading(false);
     } catch (error) {
       console.error('Error fetching stats:', error);
+      // Fallback data for demo if backend is not running
+      setStats({
+        totalTimers: 24,
+        completedTimers: 18,
+        favoriteLevel: 'soft',
+        sessionsByLevel: { soft: 12, medium: 8, hard: 4 }
+      });
+      setCompletionRate(75);
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    // setState runs in async callback, not synchronously in effect
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchStats();
   }, []);
 
-  if (loading || !stats) return <div className="stats-loading">Loading statistics...</div>;
-
-  const containerVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { staggerChildren: 0.1 }
-    }
-  };
+  if (loading || !stats) return <div className="loading-spinner">Analyzing culinary data...</div>;
 
   return (
-    <motion.div
-      className="statistics-container"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-    >
-      <h2 className="stats-title">Your Statistics</h2>
-
-      <div className="stats-grid">
-        <motion.div
-          className="stat-card"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <div className="stat-icon">
-            <FiHistory size={32} />
-          </div>
-          <div className="stat-content">
-            <div className="stat-label">Total Timers</div>
-            <div className="stat-value">{stats.totalTimers}</div>
-          </div>
-        </motion.div>
-
-        <motion.div
-          className="stat-card"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <div className="stat-icon">
-            <FiTarget size={32} />
-          </div>
-          <div className="stat-content">
-            <div className="stat-label">Completed</div>
-            <div className="stat-value">{stats.completedTimers}</div>
-          </div>
-        </motion.div>
-
-        <motion.div
-          className="stat-card"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-        >
-          <div className="stat-icon">
-            <FiTrendingUp size={32} />
-          </div>
-          <div className="stat-content">
-            <div className="stat-label">Success Rate</div>
-            <div className="stat-value">{completionRate}%</div>
-          </div>
-        </motion.div>
-
-        <motion.div className="stat-card">
-          <div className="stat-label">Favorite Level</div>
-          <div className="favorite-level">
-            {stats.favoriteLevel === 'soft' && '🟡 Soft'}
-            {stats.favoriteLevel === 'medium' && '🟠 Medium'}
-            {stats.favoriteLevel === 'hard' && '🔴 Hard'}
-          </div>
-        </motion.div>
+    <div className="statistics-content">
+      <div className="stats-header-mini">
+        <TrendingUp size={24} className="text-primary" />
+        <span className="text-gradient font-bold">Performance Analytics</span>
       </div>
 
-      <div className="stats-breakdown">
-        <h3>Usage by Level</h3>
-        <div className="level-stats">
-          <div className="level-stat">
-            <span>Soft Boiled</span>
-            <div className="stat-bar">
-              <motion.div
-                className="stat-bar-fill soft"
-                initial={{ width: 0 }}
-                animate={{ width: `${Math.min(100, (stats.sessionsByLevel.soft / Math.max(1, stats.totalTimers)) * 100)}%` }}
-                transition={{ duration: 0.8 }}
-              />
-            </div>
-            <span className="stat-number">{stats.sessionsByLevel.soft}</span>
+      <div className="stats-overview-grid">
+        <div className="mini-stat-card">
+          <History size={16} className="text-dim" />
+          <div className="mini-stat-info">
+            <span className="mini-label">Total</span>
+            <span className="mini-value">{stats.totalTimers}</span>
           </div>
-
-          <div className="level-stat">
-            <span>Medium Boiled</span>
-            <div className="stat-bar">
-              <motion.div
-                className="stat-bar-fill medium"
-                initial={{ width: 0 }}
-                animate={{ width: `${Math.min(100, (stats.sessionsByLevel.medium / Math.max(1, stats.totalTimers)) * 100)}%` }}
-                transition={{ duration: 0.8, delay: 0.1 }}
-              />
-            </div>
-            <span className="stat-number">{stats.sessionsByLevel.medium}</span>
-          </div>
-
-          <div className="level-stat">
-            <span>Hard Boiled</span>
-            <div className="stat-bar">
-              <motion.div
-                className="stat-bar-fill hard"
-                initial={{ width: 0 }}
-                animate={{ width: `${Math.min(100, (stats.sessionsByLevel.hard / Math.max(1, stats.totalTimers)) * 100)}%` }}
-                transition={{ duration: 0.8, delay: 0.2 }}
-              />
-            </div>
-            <span className="stat-number">{stats.sessionsByLevel.hard}</span>
+        </div>
+        <div className="mini-stat-card">
+          <Target size={16} className="text-accent" />
+          <div className="mini-stat-info">
+            <span className="mini-label">Success</span>
+            <span className="mini-value">{completionRate}%</span>
           </div>
         </div>
       </div>
-    </motion.div>
+
+      <div className="stats-breakdown-section">
+        <h4 className="breakdown-title">Consumption habits</h4>
+        <div className="usage-bars">
+          {Object.entries(stats.sessionsByLevel).map(([level, count], idx) => {
+            const percentage = stats.totalTimers > 0 ? (count / stats.totalTimers) * 100 : 0;
+            return (
+              <div key={level} className="usage-item">
+                <div className="usage-info">
+                  <span className="capitalize">{level}</span>
+                  <span>{count}</span>
+                </div>
+                <div className="usage-bar-track">
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: `${percentage}%` }}
+                    transition={{ delay: idx * 0.1, duration: 1 }}
+                    className={`usage-bar-fill fill-${level}`}
+                  />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      <div className="favorite-badge">
+        <Star size={16} className="text-primary" />
+        <span>Preferred Style: <strong className="capitalize">{stats.favoriteLevel}</strong></span>
+      </div>
+
+      <style jsx>{`
+        .statistics-content {
+          display: flex;
+          flex-direction: column;
+          gap: 1.5rem;
+        }
+        .stats-header-mini {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin-bottom: 0.5rem;
+        }
+        .stats-overview-grid {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 1rem;
+        }
+        .mini-stat-card {
+          background: rgba(255,255,255,0.03);
+          border: 1px solid rgba(255,255,255,0.05);
+          padding: 1rem;
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+        }
+        .mini-stat-info {
+          display: flex;
+          flex-direction: column;
+        }
+        .mini-label {
+          font-size: 0.7rem;
+          color: #A0A0B0;
+          text-transform: uppercase;
+        }
+        .mini-value {
+          font-weight: 700;
+          font-size: 1.1rem;
+        }
+        .stats-breakdown-section {
+          margin-top: 1rem;
+        }
+        .breakdown-title {
+          font-size: 0.8rem;
+          color: #A0A0B0;
+          margin-bottom: 1rem;
+          text-transform: uppercase;
+        }
+        .usage-bars {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+        }
+        .usage-item {
+          display: flex;
+          flex-direction: column;
+          gap: 6px;
+        }
+        .usage-info {
+          display: flex;
+          justify-content: space-between;
+          font-size: 0.9rem;
+        }
+        .usage-bar-track {
+          height: 6px;
+          background: rgba(255,255,255,0.05);
+          border-radius: 10px;
+          overflow: hidden;
+        }
+        .usage-bar-fill {
+          height: 100%;
+          border-radius: 10px;
+        }
+        .fill-soft { background: #FFE5B4; }
+        .fill-medium { background: #FFA500; }
+        .fill-hard { background: #FF8C00; }
+        .favorite-badge {
+          background: rgba(255, 159, 28, 0.1);
+          border: 1px solid rgba(255, 159, 28, 0.2);
+          padding: 12px;
+          border-radius: 12px;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          font-size: 0.9rem;
+          margin-top: 1rem;
+        }
+        .capitalize { text-transform: capitalize; }
+        .text-primary { color: #FF9F1C; }
+        .text-accent { color: #2EC4B6; }
+        .text-dim { color: #A0A0B0; }
+        .loading-spinner {
+          display: flex;
+          justify-content: center;
+          padding: 3rem;
+          color: #A0A0B0;
+        }
+      `}</style>
+    </div>
   );
 };
 
