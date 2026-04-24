@@ -37,9 +37,9 @@ A professional, high-performance web application designed to help users achieve 
 
 | Home Screen | Timer Active | Theme Customization |
 
-<img width="1905" height="864" alt="image" src="https://github.com/user-attachments/assets/6053d5ea-1a8e-4a44-8e7d-f03d2ffd716a" />
-<img width="1899" height="847" alt="image" src="https://github.com/user-attachments/assets/3ad7b9cf-6f66-4763-9ceb-272f78e87089" />
-<img width="1900" height="856" alt="image" src="https://github.com/user-attachments/assets/c634c0d9-f7de-4813-9a4d-9ec7483e74e7" />
+<img width="1919" height="854" alt="image" src="https://github.com/user-attachments/assets/2d7b7782-65a0-470b-a353-c7ccf07e9a90" />
+
+<img width="1919" height="833" alt="image" src="https://github.com/user-attachments/assets/1bc0a962-7505-4a8a-afe3-dd7867e89b92" />
 
 
 ---
