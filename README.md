@@ -1,4 +1,4 @@
-# 🥚 Egg Boiling Timer – Full Stack Web App
+# 🥚 Egg Boiling Timer 
 
 A professional, high-performance web application designed to help users achieve the perfect egg consistency through scientific timing. This project features a modern React interface, a robust Node.js backend, and a dynamic theming engine.
 
